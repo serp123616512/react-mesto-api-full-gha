@@ -1,5 +1,5 @@
 const configAuthApi = {
-  baseUrl: 'http://localhost:3001',
+  baseUrl: 'https://api.mesto.serp123616512.nomoredomains.rocks',
   headers: {
     'Content-Type': 'application/json',
   }
