@@ -12,7 +12,7 @@ const getCards = (req, res, next) => {
     .populate('owner')
     .populate('likes')
     .then((cards) => {
-      res.status(http2.constants.HTTP_STATUS_OK).send({ data: cards });
+      res.status(http2.constants.HTTP_STATUS_OK).send(cards);
     })
     .catch(next);
 };
@@ -22,7 +22,7 @@ const postCard = (req, res, next) => {
   const owner = req.user;
   Card.create({ name, link, owner })
     .then((card) => {
-      res.status(http2.constants.HTTP_STATUS_CREATED).send({ data: card });
+      res.status(http2.constants.HTTP_STATUS_CREATED).send(card);
     })
     .catch((err) => {
       if (err instanceof ValidationError) {
@@ -44,7 +44,7 @@ const deleteCard = (req, res, next) => {
       }
       return Card.findByIdAndRemove(cardId)
         .then(() => {
-          res.status(http2.constants.HTTP_STATUS_OK).send({ data: card });
+          res.status(http2.constants.HTTP_STATUS_OK).send(card);
         });
     })
     .catch(next);
@@ -60,7 +60,7 @@ const putLike = (req, res, next) => {
       if (!card) {
         throw new NotFoundError(`Карточка с id ${req.params.cardId} не найдена`);
       }
-      res.status(http2.constants.HTTP_STATUS_OK).send({ data: card });
+      res.status(http2.constants.HTTP_STATUS_OK).send(card);
     })
     .catch(next);
 };
@@ -75,7 +75,7 @@ const deleteLike = (req, res, next) => {
       if (!card) {
         throw new NotFoundError(`Карточка с id ${req.params.cardId} не найдена`);
       }
-      res.status(http2.constants.HTTP_STATUS_OK).send({ data: card });
+      res.status(http2.constants.HTTP_STATUS_OK).send(card);
     })
     .catch(next);
 };

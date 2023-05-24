@@ -1,5 +1,5 @@
 const configAuthApi = {
-  baseUrl: 'https://auth.nomoreparties.co',
+  baseUrl: 'http://localhost:3001',
   headers: {
     'Content-Type': 'application/json',
   }
@@ -23,6 +23,7 @@ class AuthApi {
     return this._request(this._baseUrl + '/signup', {
       method: 'POST',
       headers: this._headers,
+      credentials: 'include',
       body: JSON.stringify({
         email: email,
         password: password,
@@ -34,6 +35,7 @@ class AuthApi {
     return this._request(this._baseUrl + '/signin', {
       method: 'POST',
       headers: this._headers,
+      credentials: 'include',
       body: JSON.stringify({
         email: email,
         password: password,
@@ -41,13 +43,10 @@ class AuthApi {
     })
   }
 
-  checkToken({token}){
-    return this._request(this._baseUrl + '/users/me', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization' : `Bearer ${token}`
-      }
+  signOut() {
+    return this._request(this._baseUrl + '/signout', {
+      method: 'POST',
+      credentials: 'include'
     })
   }
 }

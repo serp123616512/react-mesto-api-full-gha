@@ -144,7 +144,6 @@ function App() {
     auth
     .signIn({email, password})
     .then(res => {
-      console.log(res);
       localStorage.setItem('token', res.token);
       setEmail(email);
       setLoggedIn(true);
@@ -156,28 +155,30 @@ function App() {
   function handleRegisterClick({email, password}) {
     auth
     .signUp({email, password})
-    .then(res => setIsAcceptRegisterPopupOpen(true))
-    .catch(err => setIsDeclineRegisterPopupOpen(true));
+    .then(setIsAcceptRegisterPopupOpen(true))
+    .catch(setIsDeclineRegisterPopupOpen(true));
   }
 
   function handleLogoutClick() {
-    localStorage.removeItem('token');
-    setLoggedIn(false);
+    auth
+    .signOut()
+    .then(setLoggedIn(false))
+    .catch(console.log);
   }
 
   useEffect(() => {
-    if (localStorage.getItem('token')) {
-      const token = localStorage.getItem('token');
-
-      auth
-      .checkToken({token})
-      .then(res => {
-        setEmail(res.data.email);
-        setLoggedIn(true);
-        navigate('/', {replace: true})
-      })
-      .catch(console.log);
-    }
+    api
+    .getUserData()
+    .then((user) => {
+      setEmail(user.email);
+      setLoggedIn(true);
+      setCurrentUser(user);
+      navigate('/', {replace: true})
+    })
+    .catch(() => {
+      setLoggedIn(false);
+      navigate('/sign-in');
+    });
   }, [])
 
   return (

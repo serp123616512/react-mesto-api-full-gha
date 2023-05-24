@@ -1,9 +1,6 @@
 const configApi = {
-  baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-59',
-  headers: {
-    authorization: '784482db-5b37-4870-8977-f645f2f9f48d',
-    'Content-Type': 'application/json',
-  }
+  baseUrl: 'http://localhost:3001',
+  headers: { 'Content-Type': 'application/json' }
 }
 
 class Api {
@@ -22,13 +19,15 @@ class Api {
 
   getUserData() {
     return this._request(this._baseUrl + '/users/me', {
-      headers: this._headers
+      headers: this._headers,
+      credentials: 'include',
     })
   }
 
   getCardData() {
     return this._request(this._baseUrl + '/cards', {
-      headers: this._headers
+      headers: this._headers,
+      credentials: 'include',
     })
   }
 
@@ -36,6 +35,7 @@ class Api {
     return this._request(this._baseUrl + '/users/me', {
       method: 'PATCH',
       headers: this._headers,
+      credentials: 'include',
       body: JSON.stringify({
         name: name,
         about: vocation,
@@ -47,6 +47,7 @@ class Api {
     return this._request(this._baseUrl + '/cards', {
       method: 'POST',
       headers: this._headers,
+      credentials: 'include',
       body: JSON.stringify({
         name: title,
         link: link,
@@ -57,6 +58,7 @@ class Api {
   putLike(cardId) {
     return this._request(this._baseUrl + '/cards/' + cardId + '/likes ', {
       method: 'PUT',
+      credentials: 'include',
       headers: this._headers
     })
   }
@@ -64,6 +66,7 @@ class Api {
   deleteLike(cardId) {
     return this._request(this._baseUrl + '/cards/' + cardId + '/likes ', {
       method: 'DELETE',
+      credentials: 'include',
       headers:this._headers
     })
   }
@@ -71,6 +74,7 @@ class Api {
   deleteCard(cardId) {
     return this._request(this._baseUrl + '/cards/' + cardId, {
       method: 'DELETE',
+      credentials: 'include',
       headers: this._headers
     })
   }
@@ -78,6 +82,7 @@ class Api {
   patchUserAvatar({avatar}) {
     return this._request(this._baseUrl + '/users/me/avatar', {
       method: 'PATCH',
+      credentials: 'include',
       headers: this._headers,
       body: JSON.stringify({
         avatar: avatar,

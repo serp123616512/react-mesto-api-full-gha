@@ -9,10 +9,12 @@ const BadRequestError = require('../errors/BadRequestError');
 const NotFoundError = require('../errors/NotFoundError');
 const ConflictError = require('../errors/ConflictError');
 
+const { NODE_ENV, JWT_SECRET } = process.env;
+
 const getUsers = (req, res, next) => {
   User.find({})
     .then((users) => {
-      res.status(http2.constants.HTTP_STATUS_OK).send({ data: users });
+      res.status(http2.constants.HTTP_STATUS_OK).send(users);
     })
     .catch(next);
 };
@@ -23,7 +25,7 @@ const getUserById = (req, res, next) => {
   User.findById(userId)
     .orFail(new NotFoundError(`Пользователь с id ${req.params.userId} не найден`))
     .then((user) => {
-      res.status(http2.constants.HTTP_STATUS_OK).send({ data: user });
+      res.status(http2.constants.HTTP_STATUS_OK).send(user);
     })
     .catch(next);
 };
@@ -33,7 +35,7 @@ const getUserByMe = (req, res, next) => {
 
   User.findById(_id)
     .then((user) => {
-      res.status(http2.constants.HTTP_STATUS_OK).send({ data: user });
+      res.status(http2.constants.HTTP_STATUS_OK).send(user);
     })
     .catch(next);
 };
@@ -57,7 +59,7 @@ const postUser = async (req, res, next) => {
       password: hash,
     });
     const user = await User.findById(createdUser._id);
-    return res.status(http2.constants.HTTP_STATUS_CREATED).send({ data: user });
+    return res.status(http2.constants.HTTP_STATUS_CREATED).send(user);
   } catch (err) {
     if (err instanceof ValidationError) {
       return next(new BadRequestError(err.errors.avatar.properties.message));
@@ -73,10 +75,14 @@ const signIn = (req, res, next) => {
   const { email, password } = req.body;
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, 'secret-key', { expiresIn: '7d' });
-      return res.cookie('jwt', token, { maxAge: 3600000, httpOnly: true }).send({ token }).end();
+      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret-key', { expiresIn: '7d' });
+      return res.cookie('jwt', token, { maxAge: 3600000, httpOnly: true }).send({ message: 'Авторизация прошла успешно' });
     })
     .catch(next);
+};
+
+const signOut = (req, res) => {
+  res.clearCookie('jwt').send({ message: 'Выход произведен' });
 };
 
 const patchUserProfile = (req, res, next) => {
@@ -84,7 +90,7 @@ const patchUserProfile = (req, res, next) => {
   const userId = req.user._id;
   User.findByIdAndUpdate(userId, { name, about }, { runValidators: true, new: true })
     .then((user) => {
-      res.status(http2.constants.HTTP_STATUS_OK).send({ data: user });
+      res.status(http2.constants.HTTP_STATUS_OK).send(user);
     })
     .catch(next);
 };
@@ -94,7 +100,7 @@ const patchUserAvatar = (req, res, next) => {
   const userId = req.user._id;
   User.findByIdAndUpdate(userId, { avatar }, { runValidators: true, new: true })
     .then((user) => {
-      res.status(http2.constants.HTTP_STATUS_OK).send({ data: user });
+      res.status(http2.constants.HTTP_STATUS_OK).send(user);
     })
     .catch((err) => {
       if (err instanceof ValidationError) {
@@ -110,6 +116,7 @@ module.exports = {
   getUserByMe,
   postUser,
   signIn,
+  signOut,
   patchUserProfile,
   patchUserAvatar,
 };
