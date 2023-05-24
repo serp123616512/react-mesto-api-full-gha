@@ -144,7 +144,7 @@ function App() {
     auth
     .signIn({email, password})
     .then(res => {
-      localStorage.setItem('token', res.token);
+      console.log(res);
       setEmail(email);
       setLoggedIn(true);
       navigate('/', {replace: true})
