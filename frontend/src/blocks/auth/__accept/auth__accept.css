@@ -1,0 +1,23 @@
+.auth__accept {
+  width: 100%;
+  height: 50px;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 22px;
+  text-align: center;
+  color: #000;
+  background-color: #fff;
+  border-radius: 2px;
+  border: 0;
+  margin: 27px 0 15px;
+}
+
+@media screen and (max-width: 600px) {
+  .auth__accept {
+    height: 46px;
+    font-size: 14px;
+    line-height: 17px;
+  }
+}
