@@ -17,22 +17,20 @@ const getCards = (req, res, next) => {
     .catch(next);
 };
 
-const postCard = (req, res, next) => {
+const postCard = async (req, res, next) => {
   const { name, link } = req.body;
   const owner = req.user;
-  Card.create({ name, link, owner })
-    .then((card) => {
-      Card.findById(card._id)
-        .populate('owner')
-        .populate('likes');
-    })
-    .then((card) => res.status(http2.constants.HTTP_STATUS_CREATED).send(card))
-    .catch((err) => {
-      if (err instanceof ValidationError) {
-        return next(new BadRequestError(err.errors.link.properties.message));
-      }
-      return next(err);
-    });
+
+  try {
+    const createdCard = await Card.create({ name, link, owner });
+    const card = await Card.findById(createdCard._id).populate('owner').populate('likes');
+    return res.status(http2.constants.HTTP_STATUS_CREATED).send(card);
+  } catch (err) {
+    if (err instanceof ValidationError) {
+      return next(new BadRequestError(err.errors.link.properties.message));
+    }
+    return next(err);
+  }
 };
 
 const deleteCard = (req, res, next) => {
