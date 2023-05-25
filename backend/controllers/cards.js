@@ -22,7 +22,9 @@ const postCard = (req, res, next) => {
   const owner = req.user;
   Card.create({ name, link, owner })
     .then((card) => {
-      Card.findById(card._id);
+      Card.findById(card._id)
+        .populate('owner')
+        .populate('likes');
     })
     .then((card) => res.status(http2.constants.HTTP_STATUS_CREATED).send(card))
     .catch((err) => {
