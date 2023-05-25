@@ -81,6 +81,7 @@ const signIn = (req, res, next) => {
           maxAge: 3600000,
           httpOnly: true,
           sameSite: 'none',
+          secure: true,
         })
         .send({ message: 'Авторизация прошла успешно' });
     })
@@ -88,7 +89,13 @@ const signIn = (req, res, next) => {
 };
 
 const signOut = (req, res) => {
-  res.clearCookie('jwt').send({ message: 'Выход произведен' });
+  res
+    .clearCookie('jwt', {
+      httpOnly: true,
+      sameSite: 'none',
+      secure: true,
+    })
+    .send({ message: 'Выход произведен' });
 };
 
 const patchUserProfile = (req, res, next) => {

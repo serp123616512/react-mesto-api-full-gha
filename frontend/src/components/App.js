@@ -155,8 +155,8 @@ function App() {
   function handleRegisterClick({email, password}) {
     auth
     .signUp({email, password})
-    .then(setIsAcceptRegisterPopupOpen(true))
-    .catch(setIsDeclineRegisterPopupOpen(true));
+    .then(res => setIsAcceptRegisterPopupOpen(true))
+    .catch(err => setIsDeclineRegisterPopupOpen(true));
   }
 
   function handleLogoutClick() {
