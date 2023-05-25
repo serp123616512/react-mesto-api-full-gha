@@ -81,7 +81,6 @@ const signIn = (req, res, next) => {
           maxAge: 3600000,
           httpOnly: true,
           sameSite: 'none',
-          secure: true,
         })
         .send({ message: 'Авторизация прошла успешно' });
     })
