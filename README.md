@@ -6,7 +6,7 @@
 
 ## Ссылки на проект
 
-IP-адрес IP 51.250.64.58
+IP 51.250.64.58
 
 Frontend https://mesto.serp123616512.nomoredomains.monster
 
