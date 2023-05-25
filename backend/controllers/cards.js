@@ -22,8 +22,9 @@ const postCard = (req, res, next) => {
   const owner = req.user;
   Card.create({ name, link, owner })
     .then((card) => {
-      res.status(http2.constants.HTTP_STATUS_CREATED).send(card);
+      Card.findById(card._id);
     })
+    .then((card) => res.status(http2.constants.HTTP_STATUS_CREATED).send(card))
     .catch((err) => {
       if (err instanceof ValidationError) {
         return next(new BadRequestError(err.errors.link.properties.message));
